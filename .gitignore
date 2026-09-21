@@ -1,0 +1,23 @@
+target/
+logs/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse & NetBeans ###
+.classpath
+.project
+.settings/
+build/
+/nbproject/private/
+/dist/
+
+### OS Generated ###
+Thumbs.db
+.DS_Store
+
+### Maven Wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
