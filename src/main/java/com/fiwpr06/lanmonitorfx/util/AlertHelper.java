@@ -1,0 +1,162 @@
+package com.fiwpr06.lanmonitorfx.util;
+
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.awt.Toolkit;
+import java.util.Optional;
+
+// Tiện ích hiển thị các hộp thoại thông báo, cảnh báo, thông báo nổi AnyDesk đồng bộ theo theme dự án.
+public final class AlertHelper {
+
+    private static final String THEME_CSS = "/com/fiwpr06/lanmonitorfx/css/theme.css";
+
+    private AlertHelper() {}
+
+    private static void applyTheme(DialogPane dialogPane) {
+        try {
+            var cssUrl = AlertHelper.class.getResource(THEME_CSS);
+            if (cssUrl != null) {
+                dialogPane.getStylesheets().add(cssUrl.toExternalForm());
+            }
+        } catch (Exception ignored) {}
+    }
+
+    // Hiển thị thông báo thông tin (Information).
+    public static void info(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        applyTheme(alert.getDialogPane());
+        alert.showAndWait();
+    }
+
+    // Hiển thị thông báo cảnh báo (Warning).
+    public static void warn(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        applyTheme(alert.getDialogPane());
+        alert.showAndWait();
+    }
+
+    /**
+     * Hiển thị hộp thoại xác nhận Có / Không (Confirmation).
+     *
+     * @return true nếu người dùng chọn OK, false nếu Cancel hoặc đóng dialog
+     */
+    public static boolean confirm(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        applyTheme(alert.getDialogPane());
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    /**
+     * Hiển thị hộp thoại nhập văn bản (TextInputDialog).
+     */
+    public static Optional<String> textInput(String title, String prompt) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(null);
+        dialog.setContentText(prompt);
+        applyTheme(dialog.getDialogPane());
+        return dialog.showAndWait();
+    }
+
+    /**
+     * Cửa sổ thông báo nổi chuyên dụng đè lên tất cả ứng dụng (Always On Top) kèm chuông cảnh báo.
+     * Đảm bảo sinh viên đang làm bài hoặc mở bất kỳ app nào cũng lập tức nhìn thấy thông báo từ Giáo viên.
+     */
+    public static void showNotificationPopup(String title, String message) {
+        Platform.runLater(() -> {
+            try {
+                // Phát âm thanh cảnh báo hệ thống
+                Toolkit.getDefaultToolkit().beep();
+
+                Stage stage = new Stage(StageStyle.UTILITY);
+                stage.setTitle(title);
+                stage.initModality(Modality.NONE);
+                stage.setAlwaysOnTop(true);
+
+                VBox root = new VBox(14);
+                root.setPadding(new Insets(20));
+                root.setStyle("-fx-background-color: #0F141C; -fx-border-color: #00D2E6; -fx-border-width: 2px; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+
+                HBox header = new HBox(10);
+                header.setAlignment(Pos.CENTER_LEFT);
+                Label iconLbl = new Label("📢");
+                iconLbl.setStyle("-fx-font-size: 26px;");
+
+                Label titleLbl = new Label(title);
+                titleLbl.setStyle("-fx-font-family: 'Segoe UI', Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00D2E6;");
+                header.getChildren().addAll(iconLbl, titleLbl);
+
+                TextArea msgArea = new TextArea(message);
+                msgArea.setWrapText(true);
+                msgArea.setEditable(false);
+                msgArea.setPrefRowCount(4);
+                msgArea.setPrefWidth(420);
+                msgArea.setStyle("-fx-control-inner-background: #080B10; -fx-background-color: #080B10; -fx-text-fill: #F0F4F8; -fx-font-size: 14px; -fx-font-family: 'Segoe UI', Arial;");
+
+                Button btnClose = new Button("Đã hiểu (Đóng)");
+                btnClose.setDefaultButton(true);
+                btnClose.setStyle("-fx-background-color: #00D2E6; -fx-text-fill: #0B0E14; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
+                btnClose.setOnAction(e -> stage.close());
+
+                HBox btnBox = new HBox(btnClose);
+                btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+                root.getChildren().addAll(header, msgArea, btnBox);
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.toFront();
+                stage.show();
+            } catch (Exception e) {
+                System.err.println("Lỗi hiển thị thông báo nổi: " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Hiển thị cửa sổ xem nội dung nhật ký với TextArea cuộn được, chỉ đọc.
+     */
+    public static void showLogViewer(String title, String logContent) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText("Nhật Ký Hoạt Động Phòng Máy");
+
+        TextArea textArea = new TextArea(logContent);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setPrefWidth(650);
+        textArea.setPrefHeight(450);
+        textArea.setStyle("-fx-font-family: 'Segoe UI', 'Consolas', monospace; -fx-text-fill: #38BDF8; -fx-control-inner-background: #080B10; -fx-background-color: #080B10;");
+
+        alert.getDialogPane().setContent(textArea);
+        applyTheme(alert.getDialogPane());
+        alert.showAndWait();
+    }
+}
