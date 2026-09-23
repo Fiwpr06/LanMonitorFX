@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="cardRoot" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" spacing="6.0" styleClass="card-offline" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ClientCardController">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+         <children>
+            <Label fx:id="statusBadge" styleClass="status-badge" text="○ Offline" />
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="ipLabel" styleClass="card-ip-label" text="127.0.0.1" />
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets left="4.0" right="4.0" top="2.0" />
+         </VBox.margin>
+      </HBox>
+      <ImageView fx:id="screenImage" fitHeight="135.0" fitWidth="236.0" pickOnBounds="true" preserveRatio="true" styleClass="screen-thumbnail" />
+      <Label fx:id="nameLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="card-name-label" text="Chưa đăng nhập" />
+   </children>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</VBox>

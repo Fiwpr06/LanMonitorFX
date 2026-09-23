@@ -1,0 +1,517 @@
+/* ==========================================================================
+   LANMONITOR THEME — DARK SURVEILLANCE & ANYDESK CLEAN CYBERPUNK
+   Màu chủ đạo: Nền tối (#0B0E14, #111620), Viền (#1A2233), Cyan Neon (#00D2E6),
+   Xanh lá Online (#2EE68A), Đỏ cảnh báo (#FF3B56), Xanh dịu (#38BDF8)
+   ========================================================================== */
+
+.root {
+    -fx-base: #0B0E14;
+    -fx-background-color: #0B0E14;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #E2E8F0;
+}
+
+/* --- TOOLBAR SERVER --- */
+.tool-bar {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 8px 12px;
+    -fx-spacing: 8px;
+}
+
+/* Nút bấm Chính (Primary) */
+.btn-primary {
+    -fx-background-color: #00D2E6;
+    -fx-text-fill: #0B0E14;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 6px 14px;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: #33DCED;
+}
+.btn-primary:pressed {
+    -fx-background-color: #00B8CC;
+}
+
+/* Nút bấm Phụ (Secondary) */
+.btn-secondary {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-border-color: #2D3748;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px 12px;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Nút Nguy hiểm (Danger / Đỏ) */
+.btn-danger {
+    -fx-background-color: #FF3B56;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+.btn-danger:hover {
+    -fx-background-color: #FF5A72;
+}
+
+/* MenuButton */
+.menu-btn {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-border-color: #2D3748;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px 12px;
+    -fx-cursor: hand;
+}
+.menu-btn:hover {
+    -fx-background-color: #242E42;
+}
+.context-menu {
+    -fx-background-color: #111620;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px;
+}
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-padding: 6px 12px;
+}
+.menu-item:focused, .menu-item:hover {
+    -fx-background-color: #1A2233;
+}
+.menu-item .label {
+    -fx-text-fill: #E2E8F0;
+}
+
+/* IP Server Badge trên Toolbar */
+.server-ip-title {
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.server-ip-badge {
+    -fx-background-color: #080B10;
+    -fx-text-fill: #00D2E6;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-font-family: 'Consolas', monospace;
+    -fx-padding: 4px 10px;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+/* --- TAB PANE SERVER --- */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+}
+.tab-pane .tab {
+    -fx-background-color: #111620;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: #1A2233;
+    -fx-border-color: #00D2E6;
+    -fx-border-width: 0 0 2px 0;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #00D2E6;
+}
+
+/* --- TABLE VIEW --- */
+.table-view {
+    -fx-background-color: #0B0E14;
+    -fx-table-cell-border-color: #1A2233;
+}
+.table-view .column-header-background {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 38px;
+    -fx-font-weight: bold;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #94A3B8;
+}
+.table-row-cell {
+    -fx-background-color: #0B0E14;
+    -fx-cell-size: 36px;
+}
+.table-row-cell:odd {
+    -fx-background-color: #0E121A;
+}
+.table-row-cell:hover {
+    -fx-background-color: #161D2B;
+}
+.table-row-cell:selected {
+    -fx-background-color: #1E293B;
+}
+.table-row-cell .text {
+    -fx-fill: #E2E8F0;
+}
+
+/* --- THẺ GIÁM SÁT MÀN HÌNH (CLIENT CARD) --- */
+.card-offline {
+    -fx-background-color: #111620;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.card-online {
+    -fx-background-color: #111620;
+    -fx-border-color: #00D2E6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.card-warning {
+    -fx-background-color: #1E1216;
+    -fx-border-color: #FF3B56;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.screen-thumbnail {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 4, 0, 0, 2);
+}
+.card-name-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #F1F5F9;
+    -fx-font-size: 13px;
+}
+.card-ip-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+    -fx-font-family: 'Consolas', monospace;
+    -fx-cursor: hand;
+}
+.card-ip-label:hover {
+    -fx-text-fill: #00D2E6;
+}
+
+/* --- TAB LOG VIEWER --- */
+.log-toolbar {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 6px 12px;
+    -fx-spacing: 8px;
+}
+.log-text-area {
+    -fx-font-family: 'Segoe UI', 'Consolas', monospace;
+    -fx-font-size: 13px;
+    -fx-text-fill: #38BDF8;
+    -fx-control-inner-background: #080B10;
+    -fx-background-color: #080B10;
+    -fx-border-color: transparent;
+}
+.status-bar {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px 0 0 0;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 12px;
+}
+
+/* ==========================================================================
+   GIAO DIỆN CLIENT PHONG CÁCH ANYDESK
+   ========================================================================== */
+
+.anydesk-root {
+    -fx-background-color: #0B0E14;
+}
+
+.anydesk-header {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.anydesk-logo {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+}
+
+.status-badge-offline {
+    -fx-background-color: #1E293B;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 12px;
+}
+
+.status-badge-online {
+    -fx-background-color: #064E3B;
+    -fx-text-fill: #2EE68A;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 12px;
+}
+
+.my-ip-container {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 3px 8px;
+}
+
+.ip-value-label {
+    -fx-font-family: 'Consolas', monospace;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+    -fx-font-size: 12px;
+}
+
+.btn-mini-copy {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.btn-mini-copy:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #00D2E6;
+}
+
+/* Thẻ tổng quát AnyDesk */
+.anydesk-card {
+    -fx-background-color: #111620;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/* Thẻ This Desk với vạch nhấn đỏ đặc trưng AnyDesk */
+.anydesk-card-red {
+    -fx-border-color: #FF3B56 #1A2233 #1A2233 #FF3B56;
+    -fx-border-width: 1px 1px 1px 4px;
+}
+
+/* Thẻ Remote Server với vạch nhấn Cyan / Xanh lá */
+.anydesk-card-green {
+    -fx-border-color: #00D2E6 #1A2233 #1A2233 #00D2E6;
+    -fx-border-width: 1px 1px 1px 4px;
+}
+
+.card-section-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E2E8F0;
+}
+.card-section-title-red {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF3B56;
+}
+.card-section-title-green {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+}
+
+/* Khối địa chỉ AnyDesk Address Box */
+.address-box {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+}
+.address-caption {
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B;
+    -fx-text-transform: uppercase;
+}
+.address-number {
+    -fx-font-family: 'Consolas', monospace;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+}
+
+.btn-icon {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 14px;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.btn-icon:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #00D2E6;
+}
+
+.dim-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #94A3B8;
+}
+.dim-label-bold {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B;
+}
+.value-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F1F5F9;
+}
+.value-label-cyan {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+    -fx-font-family: 'Consolas', monospace;
+}
+.value-label-gold {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F59E0B;
+    -fx-font-family: 'Consolas', monospace;
+}
+.value-label-green {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2EE68A;
+}
+
+.perm-active {
+    -fx-font-size: 11px;
+    -fx-text-fill: #2EE68A;
+}
+
+/* Nút Kết nối to rõ kiểu AnyDesk */
+.btn-connect {
+    -fx-background-color: #00D2E6;
+    -fx-text-fill: #0B0E14;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.btn-connect:hover {
+    -fx-background-color: #33DCED;
+}
+.btn-connect:pressed {
+    -fx-background-color: #00B8CC;
+}
+
+.session-live-badge {
+    -fx-background-color: #064E3B;
+    -fx-text-fill: #2EE68A;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 4px;
+}
+
+/* Trường nhập liệu */
+.text-field-custom {
+    -fx-background-color: #080B10;
+    -fx-text-fill: #F0F4F8;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 6px 10px;
+}
+.text-field-custom:focused {
+    -fx-border-color: #00D2E6;
+}
+
+/* Hộp thư thông báo AnyDesk Feed */
+.notice-badge {
+    -fx-background-color: #0A2540;
+    -fx-text-fill: #00D2E6;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+}
+.btn-mini {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.btn-mini:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #E2E8F0;
+}
+
+.notice-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.notice-container {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.notice-card {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.placeholder-label {
+    -fx-text-fill: #475569;
+    -fx-font-style: italic;
+    -fx-padding: 20px;
+}
+
+/* Footer */
+.anydesk-footer {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px 0 0 0;
+}
+.footer-label {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 11px;
+}
+.footer-brand {
+    -fx-text-fill: #475569;
+    -fx-font-size: 11px;
+    -fx-font-family: 'Consolas', monospace;
+}
