@@ -229,4 +229,48 @@ public class SystemIntegrationTest {
         assertFalse(ip.isBlank());
         assertFalse(ip.equals("0.0.0.0"));
     }
+
+    @Test
+    public void testPrivateMessageIsolationAndScope() throws Exception {
+        BlockingQueue<Message> c1Commands = new LinkedBlockingQueue<>();
+        BlockingQueue<Message> c2Commands = new LinkedBlockingQueue<>();
+
+        TcpClient client1 = new TcpClient(c1Commands::add);
+        TcpClient client2 = new TcpClient(c2Commands::add);
+
+        assertTrue(client1.connect("127.0.0.1", "23DA101", "Sinh Vien 1"));
+        assertTrue(client2.connect("127.0.0.1", "23DA102", "Sinh Vien 2"));
+        Thread.sleep(300);
+
+        // 1. Giáo viên gửi tin nhắn RIÊNG tới Sinh Vien 1
+        String privateMsg = "Em chú ý hoàn thành câu 3 nhé!";
+        registry.sendTo("23DA101", Protocol.buildPrivateNotify(privateMsg));
+
+        // Sinh viên 1 phải nhận được tin nhắn riêng
+        Message c1Received = c1Commands.poll(2, TimeUnit.SECONDS);
+        assertNotNull(c1Received, "Sinh viên 1 phải nhận được tin nhắn riêng!");
+        assertEquals(Protocol.CMD_NOTIFY, c1Received.command());
+        assertTrue(c1Received.param(0).contains("[GỬI RIÊNG]"));
+        assertTrue(c1Received.param(0).contains(privateMsg));
+
+        // Sinh viên 2 KHÔNG ĐƯỢC NHẬN BẤT KỲ GÓI TIN NÀO (Bảo mật 100%)
+        Message c2Received = c2Commands.poll(1, TimeUnit.SECONDS);
+        assertNull(c2Received, "Sinh viên 2 TUYỆT ĐỐI KHÔNG được nhận tin nhắn riêng của Sinh viên 1!");
+
+        // 2. Giáo viên gửi thông báo CẢ LỚP
+        String broadcastMsg = "Còn 15 phút nữa hết giờ!";
+        registry.sendToAll(Protocol.buildBroadcastNotify(broadcastMsg));
+
+        Message c1Broadcast = c1Commands.poll(2, TimeUnit.SECONDS);
+        Message c2Broadcast = c2Commands.poll(2, TimeUnit.SECONDS);
+
+        assertNotNull(c1Broadcast, "Sinh viên 1 phải nhận được thông báo cả lớp!");
+        assertNotNull(c2Broadcast, "Sinh viên 2 phải nhận được thông báo cả lớp!");
+        assertTrue(c1Broadcast.param(0).contains("[CẢ LỚP]"));
+        assertTrue(c2Broadcast.param(0).contains("[CẢ LỚP]"));
+
+        client1.disconnect();
+        client2.disconnect();
+        Thread.sleep(200);
+    }
 }

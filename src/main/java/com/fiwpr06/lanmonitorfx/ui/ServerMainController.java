@@ -424,10 +424,13 @@ public class ServerMainController {
         );
         msgOpt.ifPresent(msg -> {
             if (!msg.isBlank()) {
+                String payload = targets.size() == 1
+                        ? Protocol.buildPrivateNotify(msg.trim())
+                        : Protocol.buildGroupNotify(targets.size(), msg.trim());
                 for (ClientSession c : targets) {
-                    registry.sendTo(c.getClientId(), Protocol.buildNotify(msg.trim()));
+                    registry.sendTo(c.getClientId(), payload);
                 }
-                FileLogger.log("💬 Giáo viên gửi thông báo tới " + targets.size() + " máy tính đã chọn: " + msg.trim());
+                FileLogger.log("🔒 Giáo viên gửi thông báo tới " + targets.size() + " máy tính đã chọn: " + msg.trim());
                 setStatus("💬 Đã gửi thông báo tới " + targets.size() + " máy tính đã chọn!");
             }
         });
@@ -559,8 +562,8 @@ public class ServerMainController {
         Optional<String> msgOpt = AlertHelper.textInput("Gửi thông báo cả lớp", "Nhập nội dung thông báo gửi tới toàn bộ lớp học:");
         msgOpt.ifPresent(msg -> {
             if (!msg.isBlank()) {
-                registry.sendToAll(Protocol.buildNotify(msg.trim()));
-                FileLogger.log("💬 Giáo viên gửi thông báo tới cả lớp: " + msg.trim());
+                registry.sendToAll(Protocol.buildBroadcastNotify(msg.trim()));
+                FileLogger.log("📢 Giáo viên gửi thông báo tới CẢ LỚP: " + msg.trim());
                 AlertHelper.info("Thành công", "Đã gửi thông báo thành công tới cả lớp!");
             }
         });
@@ -597,13 +600,13 @@ public class ServerMainController {
     public void sendNotifyToClient(ClientSession session) {
         Optional<String> msgOpt = AlertHelper.textInput(
                 "Gửi thông báo riêng",
-                "Nhập nội dung gửi tới " + session.getHoTen() + " (" + session.getIpAddress() + "):"
+                "Nhập nội dung gửi riêng tới " + session.getHoTen() + " (" + session.getIpAddress() + "):"
         );
         msgOpt.ifPresent(msg -> {
             if (!msg.isBlank()) {
-                registry.sendTo(session.getClientId(), Protocol.buildNotify(msg.trim()));
-                FileLogger.log("💬 Giáo viên gửi thông báo riêng tới " + session.getHoTen() + ": " + msg.trim());
-                AlertHelper.info("Thành công", "Đã gửi thông báo riêng thành công!");
+                registry.sendTo(session.getClientId(), Protocol.buildPrivateNotify(msg.trim()));
+                FileLogger.log("🔒 Giáo viên gửi thông báo RIÊNG tới " + session.getHoTen() + " [" + session.getMssv() + "]: " + msg.trim());
+                AlertHelper.info("Thành công", "Đã gửi thông báo riêng thành công tới " + session.getHoTen() + "!");
             }
         });
     }

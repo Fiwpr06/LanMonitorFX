@@ -74,8 +74,23 @@ public final class Protocol {
         return build(CMD_SCREEN_DATA, clientId, base64Image);
     }
 
-    // Tạo gói tin NOTIFY: NOTIFY###message
+    // Tạo gói tin NOTIFY chung: NOTIFY###message
     public static String buildNotify(String message) {
         return build(CMD_NOTIFY, message);
+    }
+
+    // Tạo gói tin NOTIFY gửi tới CẢ LỚP: NOTIFY###[CẢ LỚP] message
+    public static String buildBroadcastNotify(String message) {
+        return build(CMD_NOTIFY, "[CẢ LỚP] " + message);
+    }
+
+    // Tạo gói tin NOTIFY gửi RIÊNG cho 1 học sinh: NOTIFY###[GỬI RIÊNG] message
+    public static String buildPrivateNotify(String message) {
+        return build(CMD_NOTIFY, "[GỬI RIÊNG] " + message);
+    }
+
+    // Tạo gói tin NOTIFY gửi RIÊNG cho một nhóm máy tính: NOTIFY###[GỬI RIÊNG NHÓM N MÁY] message
+    public static String buildGroupNotify(int count, String message) {
+        return build(CMD_NOTIFY, "[GỬI RIÊNG NHÓM " + count + " MÁY] " + message);
     }
 }

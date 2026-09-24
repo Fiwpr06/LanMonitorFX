@@ -13,20 +13,19 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="680.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ServerMainController">
+<BorderPane prefHeight="780.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ServerMainController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <!-- THANH CÔNG CỤ CHÍNH: CÁC THAO TÁC TOÀN CỤC CẢ LỚP -->
-            <ToolBar styleClass="tool-bar">
-               <items>
+            <!-- THANH CÔNG CỤ CHÍNH: CÁC THAO TÁC TOÀN CỤC CẢ LỚP (HBox chống tràn tự động thu gọn) -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="tool-bar">
+               <children>
                   <Button mnemonicParsing="false" onAction="#onLock" styleClass="btn-primary" text="🔒 Khóa cả lớp" />
                   <Button mnemonicParsing="false" onAction="#onUnlock" styleClass="btn-primary" text="🔓 Mở khóa cả lớp" />
                   <MenuButton mnemonicParsing="false" styleClass="menu-btn" text="Quản lý cả lớp ▾">
@@ -41,16 +40,20 @@
                   </MenuButton>
                   <Button mnemonicParsing="false" onAction="#onNotify" styleClass="btn-primary" text="💬 Gửi thông báo cả lớp" />
                   <Button mnemonicParsing="false" onAction="#onViewLog" styleClass="btn-secondary" text="📜 Xem nhật ký" />
+                  <Region HBox.hgrow="ALWAYS" />
                   <Separator orientation="VERTICAL" />
-                  <HBox alignment="CENTER_LEFT" spacing="6.0">
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
                         <Label styleClass="server-ip-title" text="🌐 IP Server:" />
                         <Label fx:id="lblServerIp" styleClass="server-ip-badge" text="127.0.0.1" />
                         <Button fx:id="btnCopyIp" mnemonicParsing="false" onAction="#onCopyServerIp" styleClass="btn-secondary" text="📋 Copy IP" />
                      </children>
                   </HBox>
-               </items>
-            </ToolBar>
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="12.0" right="12.0" top="8.0" />
+               </padding>
+            </HBox>
 
             <!-- THANH THAO TÁC THEO MÁY ĐƯỢC CHỌN (GOOGLE DRIVE STYLE ACTION BAR) -->
             <HBox fx:id="selectionBar" alignment="CENTER_LEFT" managed="false" spacing="10.0" styleClass="selection-bar" visible="false">
@@ -109,14 +112,18 @@
                <content>
                   <BorderPane>
                      <top>
-                        <ToolBar styleClass="log-toolbar" BorderPane.alignment="CENTER">
-                          <items>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="log-toolbar" BorderPane.alignment="CENTER">
+                          <children>
                             <Button mnemonicParsing="false" onAction="#onRefreshLog" styleClass="btn-secondary" text="🔄 Làm mới log" />
                             <Button mnemonicParsing="false" onAction="#onOpenLogFolder" styleClass="btn-secondary" text="📂 Mở thư mục logs" />
                             <Button mnemonicParsing="false" onAction="#onClearLog" styleClass="btn-secondary" text="🗑️ Xóa log hôm nay" />
+                            <Region HBox.hgrow="ALWAYS" />
                             <Label fx:id="lblLogStatus" styleClass="card-ip-label" text="🟢 Đang đồng bộ thời gian thực" />
-                          </items>
-                        </ToolBar>
+                          </children>
+                          <padding>
+                             <Insets bottom="6.0" left="12.0" right="12.0" top="6.0" />
+                          </padding>
+                        </HBox>
                      </top>
                      <center>
                         <TextArea fx:id="txtLiveLog" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="log-text-area" wrapText="true" BorderPane.alignment="CENTER">

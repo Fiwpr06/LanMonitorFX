@@ -87,6 +87,9 @@ public final class AlertHelper {
     /**
      * Cửa sổ thông báo nổi chuyên dụng đè lên tất cả ứng dụng (Always On Top) kèm chuông cảnh báo.
      * Đảm bảo sinh viên đang làm bài hoặc mở bất kỳ app nào cũng lập tức nhìn thấy thông báo từ Giáo viên.
+     * Tự động phân biệt và tô màu:
+     * - Tin riêng: Viền vàng hổ phách, icon 🔒, tiêu đề "TIN NHẮN RIÊNG TỪ GIÁO VIÊN"
+     * - Tin cả lớp: Viền xanh Cyan, icon 📢, tiêu đề "THÔNG BÁO CHUNG CHO CẢ LỚP"
      */
     public static void showNotificationPopup(String title, String message) {
         Platform.runLater(() -> {
@@ -94,34 +97,50 @@ public final class AlertHelper {
                 // Phát âm thanh cảnh báo hệ thống
                 Toolkit.getDefaultToolkit().beep();
 
+                boolean isPrivate = message.startsWith("[GỬI RIÊNG]")
+                        || message.contains("[TIN NHẮN RIÊNG]")
+                        || message.contains("[GỬI RIÊNG NHÓM")
+                        || title.contains("RIÊNG");
+
+                String borderColor = isPrivate ? "#F59E0B" : "#00D2E6";
+                String titleColor = isPrivate ? "#F59E0B" : "#00D2E6";
+                String icon = isPrivate ? "🔒" : "📢";
+                String scopeTag = isPrivate ? "TIN NHẮN RIÊNG TỪ GIÁO VIÊN" : "THÔNG BÁO CHUNG CHO CẢ LỚP";
+                String scopeSub = isPrivate ? "(Chỉ gửi riêng cho máy tính của bạn, các bạn khác không nhận được)" : "(Thông báo phát sóng chung tới toàn thể phòng máy)";
+
                 Stage stage = new Stage(StageStyle.UTILITY);
-                stage.setTitle(title);
+                stage.setTitle(scopeTag);
                 stage.initModality(Modality.NONE);
                 stage.setAlwaysOnTop(true);
 
-                VBox root = new VBox(14);
-                root.setPadding(new Insets(20));
-                root.setStyle("-fx-background-color: #0F141C; -fx-border-color: #00D2E6; -fx-border-width: 2px; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+                VBox root = new VBox(12);
+                root.setPadding(new Insets(18));
+                root.setStyle("-fx-background-color: #0F141C; -fx-border-color: " + borderColor + "; -fx-border-width: 2px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, " + (isPrivate ? "rgba(245, 158, 11, 0.35)" : "rgba(0, 210, 230, 0.35)") + ", 12, 0, 0, 2);");
 
                 HBox header = new HBox(10);
                 header.setAlignment(Pos.CENTER_LEFT);
-                Label iconLbl = new Label("📢");
+                Label iconLbl = new Label(icon);
                 iconLbl.setStyle("-fx-font-size: 26px;");
 
-                Label titleLbl = new Label(title);
-                titleLbl.setStyle("-fx-font-family: 'Segoe UI', Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00D2E6;");
-                header.getChildren().addAll(iconLbl, titleLbl);
+                VBox headerTexts = new VBox(2);
+                Label titleLbl = new Label(scopeTag);
+                titleLbl.setStyle("-fx-font-family: 'Segoe UI', Arial; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + titleColor + ";");
+                Label subLbl = new Label(scopeSub);
+                subLbl.setStyle("-fx-font-family: 'Segoe UI', Arial; -fx-font-size: 11px; -fx-text-fill: #94A3B8;");
+                headerTexts.getChildren().addAll(titleLbl, subLbl);
+
+                header.getChildren().addAll(iconLbl, headerTexts);
 
                 TextArea msgArea = new TextArea(message);
                 msgArea.setWrapText(true);
                 msgArea.setEditable(false);
                 msgArea.setPrefRowCount(4);
-                msgArea.setPrefWidth(420);
+                msgArea.setPrefWidth(450);
                 msgArea.setStyle("-fx-control-inner-background: #080B10; -fx-background-color: #080B10; -fx-text-fill: #F0F4F8; -fx-font-size: 14px; -fx-font-family: 'Segoe UI', Arial;");
 
                 Button btnClose = new Button("Đã hiểu (Đóng)");
                 btnClose.setDefaultButton(true);
-                btnClose.setStyle("-fx-background-color: #00D2E6; -fx-text-fill: #0B0E14; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
+                btnClose.setStyle("-fx-background-color: " + borderColor + "; -fx-text-fill: #0B0E14; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
                 btnClose.setOnAction(e -> stage.close());
 
                 HBox btnBox = new HBox(btnClose);

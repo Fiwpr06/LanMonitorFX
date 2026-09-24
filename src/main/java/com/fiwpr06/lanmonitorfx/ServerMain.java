@@ -18,7 +18,7 @@ public class ServerMain extends Application {
 
         ServerMainController controller = loader.getController();
 
-        Scene scene = new Scene(root, 1050, 680);
+        Scene scene = new Scene(root, 1240, 780);
         var cssUrl = getClass().getResource("/com/fiwpr06/lanmonitorfx/css/theme.css");
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
@@ -26,8 +26,8 @@ public class ServerMain extends Application {
 
         primaryStage.setTitle("LanMonitor — Quản Lý Phòng Máy (Giáo Viên)");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(650);
 
         primaryStage.setOnCloseRequest(event -> {
             controller.shutdown();

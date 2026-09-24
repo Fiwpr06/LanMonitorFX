@@ -291,6 +291,7 @@ public class ClientMainController {
 
     /**
      * Thêm một thẻ thông báo vào Hộp thư thông báo AnyDesk trên giao diện.
+     * Tự động phân biệt giữa [GỬI RIÊNG] và [CẢ LỚP] bằng huy hiệu và màu sắc trực quan.
      */
     public void addNotificationItem(String message) {
         Platform.runLater(() -> {
@@ -303,23 +304,32 @@ public class ClientMainController {
 
             String timeStr = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-            HBox card = new HBox(10);
+            boolean isPrivate = message.startsWith("[GỬI RIÊNG]")
+                    || message.contains("[TIN NHẮN RIÊNG]")
+                    || message.contains("[GỬI RIÊNG NHÓM");
+
+            String badgeText = isPrivate ? "🔒 TIN RIÊNG" : "📢 CẢ LỚP";
+            String badgeBg = isPrivate ? "#3D2406" : "#0A2540";
+            String badgeFg = isPrivate ? "#F59E0B" : "#00D2E6";
+            String cardClass = isPrivate ? "notice-card-private" : "notice-card";
+
+            HBox card = new HBox(8);
             card.setAlignment(Pos.CENTER_LEFT);
-            card.getStyleClass().add("notice-card");
+            card.getStyleClass().add(cardClass);
             card.setPadding(new Insets(8, 12, 8, 12));
 
-            Label iconLbl = new Label("📢");
-            iconLbl.setStyle("-fx-font-size: 16px;");
+            Label badgeLbl = new Label(badgeText);
+            badgeLbl.setStyle("-fx-background-color: " + badgeBg + "; -fx-text-fill: " + badgeFg + "; -fx-font-weight: bold; -fx-font-size: 10px; -fx-padding: 3px 6px; -fx-background-radius: 4px;");
 
             Label timeLbl = new Label("[" + timeStr + "]");
-            timeLbl.setStyle("-fx-font-family: 'Consolas', monospace; -fx-text-fill: #00D2E6; -fx-font-weight: bold; -fx-font-size: 12px;");
+            timeLbl.setStyle("-fx-font-family: 'Consolas', monospace; -fx-text-fill: #94A3B8; -fx-font-weight: bold; -fx-font-size: 11px;");
 
             Label msgLbl = new Label(message);
             msgLbl.setWrapText(true);
             msgLbl.setStyle("-fx-font-family: 'Segoe UI', Arial; -fx-text-fill: #F0F4F8; -fx-font-size: 13px;");
             HBox.setHgrow(msgLbl, Priority.ALWAYS);
 
-            card.getChildren().addAll(iconLbl, timeLbl, msgLbl);
+            card.getChildren().addAll(badgeLbl, timeLbl, msgLbl);
 
             // Thêm vào đầu danh sách (tin mới nhất lên trên)
             noticeBox.getChildren().add(0, card);

@@ -92,8 +92,11 @@ public class CommandExecutor {
             case Protocol.CMD_NOTIFY -> {
                 String message = msg.param(0);
                 if (showUiAlerts) {
-                    // Hiển thị popup nổi luôn trên cùng (AlwaysOnTop) kèm âm thanh
-                    AlertHelper.showNotificationPopup("Thông Báo Từ Giáo Viên", message);
+                    boolean isPrivate = message.startsWith("[GỬI RIÊNG]")
+                            || message.contains("[TIN NHẮN RIÊNG]")
+                            || message.contains("[GỬI RIÊNG NHÓM");
+                    String title = isPrivate ? "🔒 TIN NHẮN RIÊNG TỪ GIÁO VIÊN" : "📢 THÔNG BÁO CHUNG CHO CẢ LỚP";
+                    AlertHelper.showNotificationPopup(title, message);
                 }
                 // Đồng thời đẩy tin nhắn vào feed giao diện Client
                 if (notificationListener != null) {
