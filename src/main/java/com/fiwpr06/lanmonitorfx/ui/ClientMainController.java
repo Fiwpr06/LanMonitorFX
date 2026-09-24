@@ -62,10 +62,16 @@ public class ClientMainController {
     @FXML private Label lblFrameCount;
     @FXML private Button btnDisconnect;
 
-    // --- THẺ 3: NOTIFICATION FEED ---
+    // --- THẺ 3: NOTIFICATION FEED & SYSTEM SPECS ---
     @FXML private Label lblNoticeCount;
     @FXML private VBox noticeBox;
     @FXML private Label lblNoNotices;
+
+    // --- TAB 2: THÔNG TIN MÁY TÍNH ---
+    @FXML private Label lblOsInfo;
+    @FXML private Label lblResolutionInfo;
+    @FXML private Label lblHostInfo;
+    @FXML private Label lblJavaInfo;
 
     // --- FOOTER ---
     @FXML private Label lblFooterStatus;
@@ -97,6 +103,40 @@ public class ClientMainController {
         lblMyIp.setText(myIp);
         lblDeskId.setText(myIp);
         lblDeskHostname.setText(hostname);
+
+        initSystemSpecs(hostname);
+    }
+
+    private void initSystemSpecs(String hostname) {
+        if (lblOsInfo != null) {
+            String os = System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")";
+            lblOsInfo.setText(os);
+        }
+        if (lblHostInfo != null) {
+            lblHostInfo.setText(hostname);
+        }
+        if (lblResolutionInfo != null) {
+            try {
+                java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+                lblResolutionInfo.setText((int) screenSize.getWidth() + " x " + (int) screenSize.getHeight());
+            } catch (Exception e) {
+                lblResolutionInfo.setText("1920 x 1080");
+            }
+        }
+        if (lblJavaInfo != null) {
+            String javaVer = "Java " + System.getProperty("java.version");
+            lblJavaInfo.setText(javaVer + " (JavaFX 21)");
+        }
+    }
+
+    @FXML
+    private void onSelectLocalhost() {
+        txtServerIp.setText("127.0.0.1");
+    }
+
+    @FXML
+    private void onSelectDetectedIp() {
+        txtServerIp.setText(detectLocalIp());
     }
 
     /**

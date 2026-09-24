@@ -14,9 +14,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -25,9 +27,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
 import java.awt.Desktop;
@@ -39,6 +43,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,7 +51,8 @@ import java.util.Optional;
  * Controller chính quản lý bảng điều khiển phía Giáo viên (Dashboard).
  * Hỗ trợ:
  * - Hiển thị và sao chép IP máy chủ (Server IP).
- * - Quản lý máy trạm (Tắt máy / Khởi động lại / Đăng xuất riêng lẻ hoặc toàn bộ).
+ * - Quản lý máy tính (Tắt máy / Khởi động lại / Đăng xuất riêng lẻ, theo nhóm chọn hoặc toàn bộ cả lớp).
+ * - Thanh thao tác theo nhóm máy được chọn (Google Drive Style Contextual Action Bar).
  * - Xem nhật ký trực tiếp (Live Log Tab) đồng bộ thời gian thực UTF-8.
  * - Menu ngữ cảnh (Right-click) trên từng sinh viên để thao tác nhanh.
  */
@@ -54,12 +60,25 @@ public class ServerMainController {
 
     @FXML private TabPane tabPane;
     @FXML private Tab tabLog;
+
+    // --- GOOGLE DRIVE-STYLE SELECTION ACTION BAR ---
+    @FXML private HBox selectionBar;
+    @FXML private Label lblSelectedCount;
+    @FXML private Button btnActionNotify;
+    @FXML private Button btnActionLock;
+    @FXML private Button btnActionUnlock;
+    @FXML private Button btnActionShutdown;
+    @FXML private Button btnActionRestart;
+
+    // --- TABLE VIEW ---
     @FXML private TableView<ClientSession> clientTable;
+    @FXML private TableColumn<ClientSession, Boolean> colSelect;
     @FXML private TableColumn<ClientSession, Number> colIndex;
     @FXML private TableColumn<ClientSession, String> colMssv;
     @FXML private TableColumn<ClientSession, String> colName;
     @FXML private TableColumn<ClientSession, String> colIp;
     @FXML private TableColumn<ClientSession, String> colStatus;
+
     @FXML private FlowPane monitorGrid;
     @FXML private Label statusBar;
 
@@ -82,9 +101,9 @@ public class ServerMainController {
     }
 
     private void initServerIpDisplay() {
-        String localIp = detectLocalLanIp();
+        String ip = detectLocalLanIp();
         if (lblServerIp != null) {
-            lblServerIp.setText(localIp);
+            lblServerIp.setText(ip);
         }
     }
 
@@ -160,6 +179,7 @@ public class ServerMainController {
                 if (change.wasAdded()) {
                     for (ClientSession addedSession : change.getAddedSubList()) {
                         addClientCard(addedSession);
+                        addedSession.selectedProperty().addListener((obs, oldVal, newVal) -> updateSelectionBar());
                     }
                 }
                 if (change.wasRemoved()) {
@@ -169,6 +189,7 @@ public class ServerMainController {
                 }
             }
             updateStatusBar();
+            updateSelectionBar();
         });
 
         tcpServer = new TcpServer(Protocol.PORT, registry, session -> {
@@ -177,9 +198,29 @@ public class ServerMainController {
         tcpServer.start();
 
         updateStatusBar();
+        updateSelectionBar();
     }
 
     private void setupTableColumns() {
+        clientTable.setEditable(true);
+        clientTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        if (colSelect != null) {
+            CheckBox selectAll = new CheckBox();
+            selectAll.setOnAction(e -> {
+                boolean val = selectAll.isSelected();
+                if (registry != null) {
+                    for (ClientSession c : registry.getClients()) {
+                        c.setSelected(val);
+                    }
+                }
+            });
+            colSelect.setGraphic(selectAll);
+            colSelect.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
+            colSelect.setCellFactory(CheckBoxTableCell.forTableColumn(colSelect));
+            colSelect.setEditable(true);
+        }
+
         colIndex.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(clientTable.getItems().indexOf(cellData.getValue()) + 1));
         colIndex.setSortable(false);
@@ -249,7 +290,7 @@ public class ServerMainController {
                 }
             });
 
-            MenuItem shutdownItem = new MenuItem("⚡ Tắt nguồn máy này");
+            MenuItem shutdownItem = new MenuItem("⚡ Tắt máy này");
             shutdownItem.setOnAction(e -> {
                 ClientSession item = row.getItem();
                 if (item != null) shutdownSingleClient(item);
@@ -310,7 +351,7 @@ public class ServerMainController {
     private void updateStatusBar() {
         long count = registry != null ? registry.getOnlineCount() : 0;
         String ip = lblServerIp != null ? lblServerIp.getText() : detectLocalLanIp();
-        statusBar.setText("Đang lắng nghe cổng " + Protocol.PORT + "   |   🌐 IP Server: " + ip + "   |   🟢 Sĩ số lớp: " + count + " máy đang kết nối");
+        statusBar.setText("Đang lắng nghe cổng " + Protocol.PORT + "   |   🌐 IP Server: " + ip + "   |   🟢 Sĩ số lớp: " + count + " máy tính đang kết nối");
     }
 
     public void setStatus(String text) {
@@ -319,15 +360,158 @@ public class ServerMainController {
         }
     }
 
-    // --- CÁC HÀNH ĐỘNG ĐIỀU KHIỂN TỪ TOOLBAR ---
+    // --- GOOGLE DRIVE-STYLE CONTEXTUAL SELECTION MANAGEMENT ---
+
+    public void updateSelectionBar() {
+        Platform.runLater(() -> {
+            if (selectionBar == null || registry == null) return;
+            List<ClientSession> selected = registry.getClients().stream()
+                    .filter(ClientSession::isSelected)
+                    .toList();
+            int count = selected.size();
+            if (count > 0) {
+                selectionBar.setVisible(true);
+                selectionBar.setManaged(true);
+                if (lblSelectedCount != null) {
+                    lblSelectedCount.setText("✓ Đã chọn " + count + " máy tính");
+                }
+                if (btnActionNotify != null) btnActionNotify.setText("💬 Gửi thông báo (" + count + ")");
+                if (btnActionLock != null) btnActionLock.setText("🔒 Khóa (" + count + ")");
+                if (btnActionUnlock != null) btnActionUnlock.setText("🔓 Mở khóa (" + count + ")");
+                if (btnActionShutdown != null) btnActionShutdown.setText("⚡ Tắt máy (" + count + ")");
+                if (btnActionRestart != null) btnActionRestart.setText("🔄 Khởi động lại (" + count + ")");
+            } else {
+                selectionBar.setVisible(false);
+                selectionBar.setManaged(false);
+            }
+        });
+    }
+
+    public List<ClientSession> getTargetClients() {
+        if (registry == null) return List.of();
+        List<ClientSession> checked = registry.getClients().stream().filter(ClientSession::isSelected).toList();
+        if (!checked.isEmpty()) {
+            return checked;
+        }
+        ClientSession tableSelected = clientTable.getSelectionModel().getSelectedItem();
+        if (tableSelected != null) {
+            return List.of(tableSelected);
+        }
+        return List.of();
+    }
+
+    @FXML
+    private void onClearSelection() {
+        if (registry != null) {
+            for (ClientSession c : registry.getClients()) {
+                c.setSelected(false);
+            }
+        }
+        clientTable.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void onNotifySelected() {
+        List<ClientSession> targets = getTargetClients();
+        if (targets.isEmpty()) {
+            AlertHelper.warn("Chưa chọn máy tính", "Vui lòng chọn ít nhất một máy tính cần gửi thông báo!");
+            return;
+        }
+
+        Optional<String> msgOpt = AlertHelper.textInput(
+                "Gửi thông báo (" + targets.size() + " máy tính)",
+                "Nhập nội dung gửi tới " + targets.size() + " máy tính đã chọn:"
+        );
+        msgOpt.ifPresent(msg -> {
+            if (!msg.isBlank()) {
+                for (ClientSession c : targets) {
+                    registry.sendTo(c.getClientId(), Protocol.buildNotify(msg.trim()));
+                }
+                FileLogger.log("💬 Giáo viên gửi thông báo tới " + targets.size() + " máy tính đã chọn: " + msg.trim());
+                setStatus("💬 Đã gửi thông báo tới " + targets.size() + " máy tính đã chọn!");
+            }
+        });
+    }
+
+    @FXML
+    private void onLockSelected() {
+        List<ClientSession> targets = getTargetClients();
+        if (targets.isEmpty()) {
+            AlertHelper.warn("Chưa chọn máy tính", "Vui lòng chọn ít nhất một máy tính cần khóa!");
+            return;
+        }
+        for (ClientSession c : targets) {
+            registry.sendTo(c.getClientId(), Protocol.CMD_LOCK);
+            c.setWarning(true);
+        }
+        FileLogger.log("🔒 Giáo viên đã phát lệnh KHÓA " + targets.size() + " máy tính đã chọn.");
+        setStatus("🔒 Đã gửi lệnh KHÓA tới " + targets.size() + " máy tính đã chọn!");
+    }
+
+    @FXML
+    private void onUnlockSelected() {
+        List<ClientSession> targets = getTargetClients();
+        if (targets.isEmpty()) {
+            AlertHelper.warn("Chưa chọn máy tính", "Vui lòng chọn ít nhất một máy tính cần mở khóa!");
+            return;
+        }
+        for (ClientSession c : targets) {
+            registry.sendTo(c.getClientId(), Protocol.CMD_UNLOCK);
+            c.setWarning(false);
+        }
+        FileLogger.log("🔓 Giáo viên đã phát lệnh MỞ KHÓA " + targets.size() + " máy tính đã chọn.");
+        setStatus("🔓 Đã gửi lệnh MỞ KHÓA tới " + targets.size() + " máy tính đã chọn!");
+    }
+
+    @FXML
+    private void onShutdownSelected() {
+        List<ClientSession> targets = getTargetClients();
+        if (targets.isEmpty()) {
+            AlertHelper.warn("Chưa chọn máy tính", "Vui lòng chọn ít nhất một máy tính cần tắt nguồn!");
+            return;
+        }
+        boolean confirmed = AlertHelper.confirm(
+                "Xác nhận tắt máy",
+                "⚡ Bạn có chắc chắn muốn TẮT NGUỒN " + targets.size() + " máy tính đã chọn?"
+        );
+        if (confirmed) {
+            for (ClientSession c : targets) {
+                registry.sendTo(c.getClientId(), Protocol.CMD_SHUTDOWN);
+            }
+            FileLogger.log("⚡ Giáo viên đã phát lệnh TẮT NGUỒN " + targets.size() + " máy tính đã chọn.");
+            setStatus("⚡ Đã gửi lệnh tắt nguồn tới " + targets.size() + " máy tính đã chọn!");
+        }
+    }
+
+    @FXML
+    private void onRestartSelected() {
+        List<ClientSession> targets = getTargetClients();
+        if (targets.isEmpty()) {
+            AlertHelper.warn("Chưa chọn máy tính", "Vui lòng chọn ít nhất một máy tính cần khởi động lại!");
+            return;
+        }
+        boolean confirmed = AlertHelper.confirm(
+                "Xác nhận khởi động lại",
+                "🔄 Bạn có chắc chắn muốn KHỞI ĐỘNG LẠI " + targets.size() + " máy tính đã chọn?"
+        );
+        if (confirmed) {
+            for (ClientSession c : targets) {
+                registry.sendTo(c.getClientId(), Protocol.CMD_RESTART);
+            }
+            FileLogger.log("🔄 Giáo viên đã phát lệnh KHỞI ĐỘNG LẠI " + targets.size() + " máy tính đã chọn.");
+            setStatus("🔄 Đã gửi lệnh khởi động lại tới " + targets.size() + " máy tính đã chọn!");
+        }
+    }
+
+    // --- CÁC HÀNH ĐỘNG TOÀN CỤC CẢ LỚP (GLOBAL TOOLBAR) ---
 
     @FXML
     private void onLock() {
         if (ensureClientsConnected()) {
             registry.sendToAll(Protocol.CMD_LOCK);
             registry.setAllWarning(true);
-            FileLogger.log("🔒 Giáo viên đã phát lệnh KHÓA toàn bộ màn hình sinh viên.");
-            AlertHelper.info("Thành công", "Đã gửi lệnh KHÓA màn hình tới tất cả sinh viên!");
+            FileLogger.log("🔒 Giáo viên đã phát lệnh KHÓA TOÀN BỘ máy tính trong lớp.");
+            AlertHelper.info("Thành công", "Đã gửi lệnh KHÓA màn hình tới tất cả máy tính!");
         }
     }
 
@@ -336,98 +520,78 @@ public class ServerMainController {
         if (ensureClientsConnected()) {
             registry.sendToAll(Protocol.CMD_UNLOCK);
             registry.setAllWarning(false);
-            FileLogger.log("🔓 Giáo viên đã phát lệnh MỞ KHÓA toàn bộ màn hình sinh viên.");
-            AlertHelper.info("Thành công", "Đã gửi lệnh MỞ KHÓA màn hình tới tất cả sinh viên!");
+            FileLogger.log("🔓 Giáo viên đã phát lệnh MỞ KHÓA TOÀN BỘ máy tính trong lớp.");
+            AlertHelper.info("Thành công", "Đã gửi lệnh MỞ KHÓA màn hình tới tất cả máy tính!");
         }
     }
 
     @FXML
-    private void onShutdownSelected() {
-        ClientSession selected = clientTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            AlertHelper.warn("Chưa chọn sinh viên", "Vui lòng nhấp chọn một sinh viên trong bảng danh sách trước!");
-            return;
+    private void onShutdownAll() {
+        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận tắt toàn bộ", "⚡ Bạn có chắc chắn muốn TẮT NGUỒN TOÀN BỘ máy tính trong lớp?")) {
+            registry.sendToAll(Protocol.CMD_SHUTDOWN);
+            FileLogger.log("⚡ Giáo viên đã phát lệnh TẮT NGUỒN TOÀN BỘ máy tính trong lớp.");
+            AlertHelper.info("Thành công", "Đã gửi lệnh tắt nguồn tới toàn bộ máy tính!");
         }
-        shutdownSingleClient(selected);
     }
 
     @FXML
-    private void onRestartSelected() {
-        ClientSession selected = clientTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            AlertHelper.warn("Chưa chọn sinh viên", "Vui lòng nhấp chọn một sinh viên trong bảng danh sách trước!");
-            return;
+    private void onRestartAll() {
+        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận khởi động lại toàn bộ", "🔄 Bạn có chắc chắn muốn KHỞI ĐỘNG LẠI TOÀN BỘ máy tính trong lớp?")) {
+            registry.sendToAll(Protocol.CMD_RESTART);
+            FileLogger.log("🔄 Giáo viên đã phát lệnh KHỞI ĐỘNG LẠI TOÀN BỘ máy tính trong lớp.");
+            AlertHelper.info("Thành công", "Đã gửi lệnh khởi động lại tới toàn bộ máy tính!");
         }
-        restartSingleClient(selected);
     }
+
+    @FXML
+    private void onLogoutAll() {
+        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận đăng xuất toàn bộ", "🚪 Bạn có chắc chắn muốn ĐĂNG XUẤT TOÀN BỘ máy tính trong lớp?")) {
+            registry.sendToAll(Protocol.CMD_LOGOUT);
+            FileLogger.log("🚪 Giáo viên đã phát lệnh ĐĂNG XUẤT TOÀN BỘ máy tính trong lớp.");
+            AlertHelper.info("Thành công", "Đã gửi lệnh đăng xuất tới toàn bộ máy tính!");
+        }
+    }
+
+    @FXML
+    private void onNotify() {
+        if (!ensureClientsConnected()) return;
+
+        Optional<String> msgOpt = AlertHelper.textInput("Gửi thông báo cả lớp", "Nhập nội dung thông báo gửi tới toàn bộ lớp học:");
+        msgOpt.ifPresent(msg -> {
+            if (!msg.isBlank()) {
+                registry.sendToAll(Protocol.buildNotify(msg.trim()));
+                FileLogger.log("💬 Giáo viên gửi thông báo tới cả lớp: " + msg.trim());
+                AlertHelper.info("Thành công", "Đã gửi thông báo thành công tới cả lớp!");
+            }
+        });
+    }
+
+    // --- CÁC HÀNH ĐỘNG RIÊNG LẺ (MENU CHUỘT PHẢI) ---
 
     public void shutdownSingleClient(ClientSession session) {
         boolean confirmed = AlertHelper.confirm(
                 "Xác nhận tắt máy",
-                "Bạn có chắc chắn muốn TẮT NGUỒN máy của sinh viên:\n"
+                "Bạn có chắc chắn muốn TẮT NGUỒN máy tính của sinh viên:\n"
                         + session.getHoTen() + " (MSSV: " + session.getMssv() + " | IP: " + session.getIpAddress() + ")?"
         );
         if (confirmed) {
             registry.sendTo(session.getClientId(), Protocol.CMD_SHUTDOWN);
-            FileLogger.log("⚡ Giáo viên đã phát lệnh TẮT NGUỒN máy sinh viên: " + session.getHoTen() + " (" + session.getIpAddress() + ")");
-            AlertHelper.info("Thành công", "Đã gửi lệnh tắt nguồn tới máy của " + session.getHoTen() + "!");
+            FileLogger.log("⚡ Giáo viên đã phát lệnh TẮT NGUỒN máy tính: " + session.getHoTen() + " (" + session.getIpAddress() + ")");
+            AlertHelper.info("Thành công", "Đã gửi lệnh tắt nguồn tới máy tính của " + session.getHoTen() + "!");
         }
     }
 
     public void restartSingleClient(ClientSession session) {
         boolean confirmed = AlertHelper.confirm(
                 "Xác nhận khởi động lại",
-                "Bạn có chắc chắn muốn KHỞI ĐỘNG LẠI máy của sinh viên:\n"
+                "Bạn có chắc chắn muốn KHỞI ĐỘNG LẠI máy tính của sinh viên:\n"
                         + session.getHoTen() + " (MSSV: " + session.getMssv() + " | IP: " + session.getIpAddress() + ")?"
         );
         if (confirmed) {
             registry.sendTo(session.getClientId(), Protocol.CMD_RESTART);
-            FileLogger.log("🔄 Giáo viên đã phát lệnh KHỞI ĐỘNG LẠI máy sinh viên: " + session.getHoTen() + " (" + session.getIpAddress() + ")");
-            AlertHelper.info("Thành công", "Đã gửi lệnh khởi động lại tới máy của " + session.getHoTen() + "!");
+            FileLogger.log("🔄 Giáo viên đã phát lệnh KHỞI ĐỘNG LẠI máy tính: " + session.getHoTen() + " (" + session.getIpAddress() + ")");
+            AlertHelper.info("Thành công", "Đã gửi lệnh khởi động lại tới máy tính của " + session.getHoTen() + "!");
         }
-    }
-
-    @FXML
-    private void onShutdownAll() {
-        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận tắt toàn bộ", "⚠️ Bạn có chắc chắn muốn TẮT NGUỒN TOÀN BỘ máy trạm trong lớp?")) {
-            registry.sendToAll(Protocol.CMD_SHUTDOWN);
-            FileLogger.log("⚠️ Giáo viên đã phát lệnh TẮT NGUỒN TOÀN BỘ máy sinh viên.");
-            AlertHelper.info("Thành công", "Đã gửi lệnh tắt nguồn tới toàn bộ máy trạm!");
-        }
-    }
-
-    @FXML
-    private void onRestartAll() {
-        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận khởi động lại toàn bộ", "🔄 Bạn có chắc chắn muốn KHỞI ĐỘNG LẠI TOÀN BỘ máy trạm trong lớp?")) {
-            registry.sendToAll(Protocol.CMD_RESTART);
-            FileLogger.log("🔄 Giáo viên đã phát lệnh KHỞI ĐỘNG LẠI TOÀN BỘ máy sinh viên.");
-            AlertHelper.info("Thành công", "Đã gửi lệnh khởi động lại tới toàn bộ máy trạm!");
-        }
-    }
-
-    @FXML
-    private void onLogoutAll() {
-        if (ensureClientsConnected() && AlertHelper.confirm("Xác nhận đăng xuất toàn bộ", "🚪 Bạn có chắc chắn muốn ĐĂNG XUẤT TOÀN BỘ máy trạm trong lớp?")) {
-            registry.sendToAll(Protocol.CMD_LOGOUT);
-            FileLogger.log("🚪 Giáo viên đã phát lệnh ĐĂNG XUẤT TOÀN BỘ máy sinh viên.");
-            AlertHelper.info("Thành công", "Đã gửi lệnh đăng xuất tới toàn bộ máy trạm!");
-        }
-    }
-
-    // --- GỬI THÔNG BÁO ---
-
-    @FXML
-    private void onNotify() {
-        if (!ensureClientsConnected()) return;
-
-        Optional<String> msgOpt = AlertHelper.textInput("Gửi thông báo", "Nhập nội dung nhắc nhở gửi tới lớp học:");
-        msgOpt.ifPresent(msg -> {
-            if (!msg.isBlank()) {
-                registry.sendToAll(Protocol.buildNotify(msg.trim()));
-                FileLogger.log("💬 Giáo viên gửi thông báo tới cả lớp: " + msg.trim());
-                AlertHelper.info("Thành công", "Đã gửi thông báo thành công!");
-            }
-        });
     }
 
     public void sendNotifyToClient(ClientSession session) {
@@ -498,7 +662,7 @@ public class ServerMainController {
 
     private boolean ensureClientsConnected() {
         if (registry == null || registry.getOnlineCount() == 0) {
-            AlertHelper.warn("Chưa có kết nối", "Hiện chưa có sinh viên nào kết nối tới Server!");
+            AlertHelper.warn("Chưa có kết nối", "Hiện chưa có máy tính nào kết nối tới Server!");
             return false;
         }
         return true;

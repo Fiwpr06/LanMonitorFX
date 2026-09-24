@@ -9,22 +9,25 @@
 ### 1. Phía Giáo Viên (Server Dashboard)
 * **Giám sát trực quan (Monitoring Grid)**: Hiển thị lưới ảnh màn hình thu nhỏ (thumbnail) của toàn bộ học sinh kết nối, cập nhật định kỳ 2 giây/lần.
 * **Phóng to màn hình (Zoom View)**: Nhấp đúp vào bất kỳ máy học sinh để mở cửa sổ phóng to riêng biệt theo thời gian thực.
-* **Khóa / Mở khóa màn hình (Remote Lock/Unlock)**: Khóa toàn màn hình máy trạm khi cần tập trung lớp học, hiển thị cảnh báo đỏ và vô hiệu hóa thoát ứng dụng.
+* **Khóa / Mở khóa màn hình (Remote Lock/Unlock)**: Khóa toàn màn hình máy tính khi cần tập trung lớp học, hiển thị cảnh báo đỏ và vô hiệu hóa thoát ứng dụng.
+* **Quản lý theo ngữ cảnh & Đa lựa chọn phong cách Google Drive**:
+  * Tích hợp thanh công cụ ngữ cảnh nổi tự động xuất hiện khi chọn một hoặc nhiều máy tính (trên cả Bảng danh sách và Lưới thumbnail).
+  * Hỗ trợ thao tác hàng loạt: Gửi thông báo nhóm, Khóa nhóm, Mở khóa nhóm, Tắt nguồn nhóm, Khởi động lại nhóm.
 * **Quản lý nguồn hệ điều hành (Power Management)**:
   * Tắt nguồn từ xa (`shutdown /s /f /t 10`).
   * Khởi động lại máy (`shutdown /r /f /t 10`).
   * Đăng xuất phiên làm việc (`shutdown /l /f`).
-  * Hỗ trợ thực hiện trên từng sinh viên được chọn hoặc áp dụng cho TOÀN BỘ cả lớp.
+  * Hỗ trợ thực hiện trên các máy tính được chọn hoặc menu "Quản lý cả lớp ▾" cho TOÀN BỘ học sinh.
 * **Gửi thông báo (Live Notification)**:
-  * Gửi thông báo tới cả lớp qua thanh công cụ Toolbar.
-  * Gửi thông báo riêng cho từng sinh viên qua menu ngữ cảnh (Right-click).
+  * Gửi thông báo tới cả lớp qua menu công cụ hoặc thanh hành động đa lựa chọn.
+  * Gửi thông báo riêng cho từng máy tính qua menu ngữ cảnh (Right-click).
 * **Quản trị IP & Nhật ký (Live Log Viewer)**:
   * Tự động dò IP LAN máy chủ (`172.26.x.x` hoặc `192.168.x.x`), sao chép 1-click vào Clipboard.
   * Tab Nhật Ký đồng bộ thời gian thực UTF-8, lưu trữ nhật ký theo ngày tại `logs/NhatKy_dd_MM_yyyy.txt`.
 
 ### 2. Phía Sinh Viên (Client — AnyDesk Style)
 * **Giao diện Bàn làm việc (This Desk)**:
-  * Hiển thị địa chỉ IP máy trạm to rõ kèm nút sao chép nhanh.
+  * Hiển thị địa chỉ IP máy tính to rõ kèm nút sao chép nhanh và huy hiệu định danh.
   * Thẻ định danh sinh viên: Họ tên, MSSV, Tên thiết bị.
   * Bảng phân quyền phòng máy: Trạng thái chia sẻ màn hình, quyền khóa máy, quyền quản lý nguồn và nhận thông báo.
 * **Kết nối Máy chủ (Remote Server Desk)**:

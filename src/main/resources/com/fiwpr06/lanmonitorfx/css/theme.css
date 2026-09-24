@@ -200,6 +200,14 @@
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;
 }
+.card-selected {
+    -fx-background-color: #0F2338;
+    -fx-border-color: #00D2E6;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 210, 230, 0.4), 6, 0, 0, 0);
+}
 .screen-thumbnail {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 4, 0, 0, 2);
 }
@@ -514,4 +522,314 @@
     -fx-text-fill: #475569;
     -fx-font-size: 11px;
     -fx-font-family: 'Consolas', monospace;
+}
+
+/* ==========================================================================
+   THANH TÁC VỤ ĐA LỰA CHỌN PHONG CÁCH GOOGLE DRIVE
+   ========================================================================== */
+.selection-bar {
+    -fx-background-color: #111A29;
+    -fx-border-color: #00D2E6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 210, 230, 0.25), 8, 0, 0, 2);
+}
+.selection-count-badge {
+    -fx-background-color: #00D2E6;
+    -fx-text-fill: #0B0E14;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+}
+.btn-action-cyan {
+    -fx-background-color: #0E7490;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+.btn-action-cyan:hover {
+    -fx-background-color: #06B6D4;
+}
+.btn-action-primary {
+    -fx-background-color: #0284C7;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+.btn-action-primary:hover {
+    -fx-background-color: #38BDF8;
+}
+.btn-action-warning {
+    -fx-background-color: #D97706;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+.btn-action-warning:hover {
+    -fx-background-color: #F59E0B;
+}
+.btn-action-danger {
+    -fx-background-color: #DC2626;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+.btn-action-danger:hover {
+    -fx-background-color: #EF4444;
+}
+.btn-action-clear {
+    -fx-background-color: #1E293B;
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+.btn-action-clear:hover {
+    -fx-background-color: #334155;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* ==========================================================================
+   CHI TIẾT BỔ SUNG GIAO DIỆN CLIENT ANYDESK
+   ========================================================================== */
+.anydesk-header-wrapper {
+    -fx-background-color: #0B0E14;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 0 0 1px 0;
+}
+.anydesk-tab-strip {
+    -fx-background-color: #0F141C;
+    -fx-padding: 4px 12px 0 12px;
+}
+.anydesk-tab {
+    -fx-background-color: #141B26;
+    -fx-background-radius: 6px 6px 0 0;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #1A2233 #1A2233 transparent #1A2233;
+    -fx-border-width: 1px 1px 0 1px;
+    -fx-border-radius: 6px 6px 0 0;
+}
+.anydesk-tab-active {
+    -fx-background-color: #1A2233;
+    -fx-border-color: #FF3B56 #1A2233 transparent #1A2233;
+    -fx-border-width: 2px 1px 0 1px;
+}
+.anydesk-tab-icon {
+    -fx-font-size: 14px;
+}
+.anydesk-tab-text {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F1F5F9;
+}
+.anydesk-tab-plus {
+    -fx-padding: 8px 12px;
+    -fx-cursor: hand;
+}
+.anydesk-tab-plus:hover {
+    -fx-background-color: #161D2B;
+    -fx-background-radius: 6px 6px 0 0;
+}
+.anydesk-plus-icon {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+}
+.anydesk-header-status-box {
+    -fx-padding: 0 0 4px 0;
+}
+
+/* AnyDesk Badges & Titles */
+.anydesk-badge-red {
+    -fx-background-color: #FF3B56;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 3px;
+}
+.anydesk-badge-green {
+    -fx-background-color: #0E7490;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 3px;
+}
+.card-section-title-white {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F8FAFC;
+}
+
+/* AnyDesk Address Block (Big Monospace) */
+.anydesk-address-block {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 12px;
+}
+.anydesk-address-caption {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B;
+    -fx-text-transform: uppercase;
+}
+.anydesk-address-number {
+    -fx-font-family: 'Consolas', 'Courier New', monospace;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00D2E6;
+}
+.btn-anydesk-copy {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.btn-anydesk-copy:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #00D2E6;
+}
+.anydesk-ready-subtext {
+    -fx-font-size: 11px;
+    -fx-text-fill: #2EE68A;
+    -fx-font-weight: bold;
+}
+
+/* AnyDesk Profile & Permissions */
+.anydesk-profile-grid {
+    -fx-background-color: #0E131C;
+    -fx-padding: 8px 10px;
+    -fx-background-radius: 6px;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+.anydesk-perm-box {
+    -fx-background-color: #080B10;
+    -fx-padding: 8px 10px;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.perm-pill-active {
+    -fx-background-color: #064E3B;
+    -fx-text-fill: #34D399;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 4px;
+}
+
+/* AnyDesk Search Bar / Connection Input */
+.anydesk-search-bar {
+    -fx-background-color: #080B10;
+    -fx-border-color: #1A2233;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 3px 4px 3px 8px;
+}
+.anydesk-search-bar:focused-within {
+    -fx-border-color: #00D2E6;
+}
+.anydesk-search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-family: 'Consolas', monospace;
+    -fx-font-weight: bold;
+    -fx-border-width: 0;
+    -fx-padding: 6px;
+}
+.btn-anydesk-connect {
+    -fx-background-color: #00D2E6;
+    -fx-text-fill: #0B0E14;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.btn-anydesk-connect:hover {
+    -fx-background-color: #33DCED;
+}
+.btn-anydesk-connect:pressed {
+    -fx-background-color: #00B8CC;
+}
+
+/* Quick IP Chips */
+.dim-label-mini {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+}
+.btn-chip {
+    -fx-background-color: #1A2233;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 12px;
+    -fx-cursor: hand;
+    -fx-border-color: #2D3748;
+    -fx-border-radius: 12px;
+}
+.btn-chip:hover {
+    -fx-background-color: #242E42;
+    -fx-text-fill: #00D2E6;
+    -fx-border-color: #00D2E6;
+}
+
+/* Session Live Header */
+.session-live-header {
+    -fx-background-color: #064E3B;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 4px;
+}
+
+/* Bottom TabPane */
+.anydesk-subtabs .tab-header-area .tab-header-background {
+    -fx-background-color: #0F141C;
+    -fx-border-color: #1A2233;
+    -fx-border-width: 1px 0 1px 0;
+}
+.anydesk-subtabs .tab {
+    -fx-background-color: #111620;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-padding: 6px 14px;
+    -fx-cursor: hand;
+}
+.anydesk-subtabs .tab .tab-label {
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.anydesk-subtabs .tab:selected {
+    -fx-background-color: #1A2233;
+    -fx-border-color: #00D2E6;
+    -fx-border-width: 0 0 2px 0;
+}
+.anydesk-subtabs .tab:selected .tab-label {
+    -fx-text-fill: #00D2E6;
+}
+.anydesk-tab-content {
+    -fx-background-color: #0B0E14;
 }

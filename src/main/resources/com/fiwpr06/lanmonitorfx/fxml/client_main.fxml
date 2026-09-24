@@ -5,60 +5,88 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="550.0" prefWidth="790.0" styleClass="anydesk-root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ClientMainController">
+<BorderPane prefHeight="580.0" prefWidth="820.0" styleClass="anydesk-root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ClientMainController">
    <top>
-      <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="anydesk-header" BorderPane.alignment="CENTER">
+      <!-- ANYDESK HEADER: WINDOW TAB BAR -->
+      <VBox styleClass="anydesk-header-wrapper" BorderPane.alignment="CENTER">
          <children>
-            <Label styleClass="anydesk-logo" text="🛡️ LanMonitor Client" />
-            <Label fx:id="lblGlobalStatus" styleClass="status-badge-offline" text="● Chưa kết nối" />
-            <Region HBox.hgrow="ALWAYS" />
-            <HBox alignment="CENTER" spacing="6.0" styleClass="my-ip-container">
+            <HBox alignment="CENTER_LEFT" spacing="0.0" styleClass="anydesk-tab-strip">
                <children>
-                  <Label styleClass="dim-label" text="IP Máy Trạm:" />
-                  <Label fx:id="lblMyIp" styleClass="ip-value-label" text="127.0.0.1" />
-                  <Button fx:id="btnCopyMyIp" mnemonicParsing="false" onAction="#onCopyMyIp" styleClass="btn-mini-copy" text="📋 Copy" />
+                  <!-- ACTIVE ANYDESK TAB -->
+                  <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="anydesk-tab, anydesk-tab-active">
+                     <children>
+                        <Label styleClass="anydesk-tab-icon" text="🛡️" />
+                        <Label styleClass="anydesk-tab-text" text="Bàn làm việc này" />
+                     </children>
+                  </HBox>
+                  <!-- PLUS TAB -->
+                  <HBox alignment="CENTER" styleClass="anydesk-tab-plus">
+                     <children>
+                        <Label styleClass="anydesk-plus-icon" text="➕" />
+                     </children>
+                  </HBox>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <!-- RIGHT STATUS PILL -->
+                  <HBox alignment="CENTER" spacing="8.0" styleClass="anydesk-header-status-box">
+                     <children>
+                        <Label fx:id="lblGlobalStatus" styleClass="status-badge-offline" text="● Sẵn sàng kết nối" />
+                        <Separator orientation="VERTICAL" />
+                        <Label styleClass="dim-label" text="IP:" />
+                        <Label fx:id="lblMyIp" styleClass="ip-value-label" text="127.0.0.1" />
+                        <Button fx:id="btnCopyMyIp" mnemonicParsing="false" onAction="#onCopyMyIp" styleClass="btn-mini-copy" text="📋" />
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </children>
-         <padding>
-            <Insets bottom="10.0" left="16.0" right="16.0" top="10.0" />
-         </padding>
-      </HBox>
+      </VBox>
    </top>
    <center>
       <VBox spacing="14.0" BorderPane.alignment="CENTER">
          <children>
+            <!-- 2 ANYDESK PRIMARY CARDS (SPLIT ROW) -->
             <HBox spacing="14.0" VBox.vgrow="NEVER">
                <children>
-                  <!-- THẺ 1: BÀN LÀM VIỆC NÀY (THIS DESK) -->
-                  <VBox prefWidth="380.0" spacing="10.0" styleClass="anydesk-card, anydesk-card-red" HBox.hgrow="ALWAYS">
+                  <!-- THẺ 1 (BÊN TRÁI): BÀN LÀM VIỆC NÀY (THIS DESK - ANYDESK RED ACCENT) -->
+                  <VBox prefWidth="395.0" spacing="12.0" styleClass="anydesk-card, anydesk-card-red" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label styleClass="card-section-title-red" text="🖥️ BÀN LÀM VIỆC NÀY (THIS DESK)" />
-                        <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="address-box">
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
                            <children>
-                              <VBox HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="address-caption" text="ĐỊA CHỈ IP MÁY NÀY" />
-                                    <Label fx:id="lblDeskId" styleClass="address-number" text="127.0.0.1" />
-                                 </children>
-                              </VBox>
-                              <Button mnemonicParsing="false" onAction="#onCopyMyIp" styleClass="btn-icon" text="📋" />
+                              <Label styleClass="anydesk-badge-red" text="THIS DESK" />
+                              <Label styleClass="card-section-title-white" text="Bàn làm việc này" />
                            </children>
                         </HBox>
-                        <GridPane hgap="8.0" vgap="5.0">
+
+                        <!-- KHỐI ĐỊA CHỈ ANYDESK MONOSPACE LỚN -->
+                        <VBox spacing="4.0" styleClass="anydesk-address-block">
+                           <children>
+                              <Label styleClass="anydesk-address-caption" text="ĐỊA CHỈ MÁY TÍNH NÀY (ANYDESK ID)" />
+                              <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <Label fx:id="lblDeskId" styleClass="anydesk-address-number" text="127.0.0.1" HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#onCopyMyIp" styleClass="btn-anydesk-copy" text="📋 Sao chép" />
+                                 </children>
+                              </HBox>
+                              <Label styleClass="anydesk-ready-subtext" text="● Sẵn sàng nhận kết nối và giám sát từ xa" />
+                           </children>
+                        </VBox>
+
+                        <!-- THÔNG TIN ĐỊNH DANH SINH VIÊN (PROFILE CHIP) -->
+                        <GridPane hgap="8.0" styleClass="anydesk-profile-grid" vgap="6.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="NEVER" minWidth="85.0" />
+                            <ColumnConstraints hgrow="NEVER" minWidth="80.0" />
                             <ColumnConstraints hgrow="ALWAYS" />
                           </columnConstraints>
                           <rowConstraints>
@@ -67,22 +95,31 @@
                             <RowConstraints minHeight="20.0" />
                           </rowConstraints>
                            <children>
-                              <Label styleClass="dim-label" text="👤 Họ và Tên:" />
-                              <Label fx:id="lblDeskName" styleClass="value-label" text="(Chưa đăng nhập)" GridPane.columnIndex="1" />
+                              <Label styleClass="dim-label" text="👤 Sinh Viên:" />
+                              <Label fx:id="lblDeskName" styleClass="value-label-cyan" text="(Chưa đăng nhập)" GridPane.columnIndex="1" />
                               <Label styleClass="dim-label" text="🆔 Mã Số SV:" GridPane.rowIndex="1" />
                               <Label fx:id="lblDeskMssv" styleClass="value-label" text="(Chưa đăng nhập)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label styleClass="dim-label" text="💻 Thiết Bị:" GridPane.rowIndex="2" />
                               <Label fx:id="lblDeskHostname" styleClass="value-label" text="DESKTOP-LAN" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
-                        <Separator prefWidth="200.0" />
-                        <Label styleClass="dim-label-bold" text="QUYỀN HẠN PHÒNG MÁY:" />
-                        <VBox spacing="4.0">
+
+                        <!-- PHÂN QUYỀN AN TOÀN ANYDESK (PERMISSION TILES) -->
+                        <VBox spacing="4.0" styleClass="anydesk-perm-box">
                            <children>
-                              <Label styleClass="perm-active" text="✓ 👁️ Chia sẻ màn hình (2s/lần)" />
-                              <Label styleClass="perm-active" text="✓ 🔒 Chấp nhận khóa màn hình từ xa" />
-                              <Label styleClass="perm-active" text="✓ ⚡ Quản lý nguồn: Tắt máy / Khởi động lại" />
-                              <Label styleClass="perm-active" text="✓ 💬 Bật nhận thông báo trực tiếp" />
+                              <Label styleClass="dim-label-bold" text="BẢO MẬT &amp; QUYỀN HẠN PHÒNG MÁY:" />
+                              <HBox spacing="8.0">
+                                 <children>
+                                    <Label styleClass="perm-pill-active" text="✓ 👁️ Màn hình: 2s/ảnh" />
+                                    <Label styleClass="perm-pill-active" text="✓ 🔒 Khóa máy: Bật" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="8.0">
+                                 <children>
+                                    <Label styleClass="perm-pill-active" text="✓ ⚡ Nguồn điện: Cho phép" />
+                                    <Label styleClass="perm-pill-active" text="✓ 💬 Thông báo: Bật" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>
@@ -91,49 +128,74 @@
                      </padding>
                   </VBox>
 
-                  <!-- THẺ 2: KẾT NỐI MÁY CHỦ GIÁO VIÊN (REMOTE SERVER) -->
-                  <VBox prefWidth="380.0" spacing="10.0" styleClass="anydesk-card, anydesk-card-green" HBox.hgrow="ALWAYS">
+                  <!-- THẺ 2 (BÊN PHẢI): BÀN LÀM VIỆC TỪ XA (REMOTE DESK - ANYDESK GREEN ACCENT) -->
+                  <VBox prefWidth="395.0" spacing="12.0" styleClass="anydesk-card, anydesk-card-green" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label styleClass="card-section-title-green" text="🌐 KẾT NỐI GIÁO VIÊN (SERVER DESK)" />
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                           <children>
+                              <Label styleClass="anydesk-badge-green" text="REMOTE DESK" />
+                              <Label styleClass="card-section-title-white" text="Kết nối Giáo viên" />
+                           </children>
+                        </HBox>
+
                         <StackPane VBox.vgrow="ALWAYS">
                            <children>
-                              <!-- Form khi CHƯA KẾT NỐI -->
+                              <!-- FORM KHI CHƯA KẾT NỐI -->
                               <VBox fx:id="paneConnectForm" spacing="10.0">
                                  <children>
-                                    <Label styleClass="dim-label" text="Nhập IP Server hiển thị trên máy Giáo viên:" wrapText="true" />
+                                    <!-- THANH TÌM KIẾM IP SERVER CHUẨN ANYDESK -->
+                                    <VBox spacing="4.0">
+                                       <children>
+                                          <Label styleClass="dim-label" text="Nhập địa chỉ máy chủ Giáo viên (IP:Port):" />
+                                          <HBox alignment="CENTER_LEFT" spacing="6.0" styleClass="anydesk-search-bar">
+                                             <children>
+                                                <TextField fx:id="txtServerIp" promptText="192.168.1.x:9999" styleClass="anydesk-search-field" text="127.0.0.1" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="btnConnect" defaultButton="true" mnemonicParsing="false" onAction="#onConnect" styleClass="btn-anydesk-connect" text="➜ Kết Nối" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+
+                                    <!-- FORM ĐĂNG NHẬP MSSV & HỌ TÊN -->
                                     <GridPane hgap="8.0" vgap="8.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="NEVER" minWidth="75.0" />
                                         <ColumnConstraints hgrow="ALWAYS" />
                                       </columnConstraints>
                                       <rowConstraints>
-                                        <RowConstraints minHeight="30.0" />
-                                        <RowConstraints minHeight="30.0" />
-                                        <RowConstraints minHeight="30.0" />
+                                        <RowConstraints minHeight="28.0" />
+                                        <RowConstraints minHeight="28.0" />
                                       </rowConstraints>
                                        <children>
-                                          <Label styleClass="form-label" text="IP Server" />
-                                          <TextField fx:id="txtServerIp" promptText="192.168.1.x" styleClass="text-field-custom" text="127.0.0.1" GridPane.columnIndex="1" />
-                                          <Label styleClass="form-label" text="Mã SV" GridPane.rowIndex="1" />
-                                          <TextField fx:id="txtMssv" promptText="Nhập MSSV" styleClass="text-field-custom" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label styleClass="form-label" text="Họ &amp; Tên" GridPane.rowIndex="2" />
-                                          <TextField fx:id="txtName" promptText="Nhập họ và tên" styleClass="text-field-custom" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label styleClass="form-label" text="Mã Số SV:" />
+                                          <TextField fx:id="txtMssv" promptText="Nhập MSSV (ví dụ: 23DA001)" styleClass="text-field-custom" GridPane.columnIndex="1" />
+                                          <Label styleClass="form-label" text="Họ &amp; Tên:" GridPane.rowIndex="1" />
+                                          <TextField fx:id="txtName" promptText="Nhập họ và tên đầy đủ" styleClass="text-field-custom" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                        </children>
                                     </GridPane>
-                                    <Button fx:id="btnConnect" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onConnect" prefHeight="36.0" styleClass="btn-connect" text="🚀 Kết Nối Vào Lớp Học" />
+
+                                    <!-- PRESET NHANH IP -->
+                                    <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                       <children>
+                                          <Label styleClass="dim-label-mini" text="Gợi ý IP:" />
+                                          <Button mnemonicParsing="false" onAction="#onSelectLocalhost" styleClass="btn-chip" text="127.0.0.1 (Local)" />
+                                          <Button mnemonicParsing="false" onAction="#onSelectDetectedIp" styleClass="btn-chip" text="🌐 Tự động dò IP" />
+                                       </children>
+                                    </HBox>
+
                                     <Label fx:id="lblConnectStatus" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="status-label" text="" />
                                  </children>
                               </VBox>
 
-                              <!-- Card khi ĐÃ KẾT NỐI -->
-                              <VBox fx:id="paneActiveSession" managed="false" spacing="12.0" visible="false">
+                              <!-- CARD KHI ĐÃ KẾT NỐI VÀO PHIÊN HỌC -->
+                              <VBox fx:id="paneActiveSession" managed="false" spacing="10.0" visible="false">
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="session-live-header">
                                        <children>
                                           <Label styleClass="session-live-badge" text="🟢 PHIÊN HỌC ĐANG HOẠT ĐỘNG" />
                                        </children>
                                     </HBox>
-                                    <GridPane hgap="8.0" vgap="8.0">
+                                    <GridPane hgap="8.0" vgap="6.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="NEVER" minWidth="95.0" />
                                         <ColumnConstraints hgrow="ALWAYS" />
@@ -149,9 +211,9 @@
                                           <Label fx:id="lblConnectedServer" styleClass="value-label-cyan" text="127.0.0.1:9999" GridPane.columnIndex="1" />
                                           <Label styleClass="dim-label" text="Thời Gian Học:" GridPane.rowIndex="1" />
                                           <Label fx:id="lblSessionTimer" styleClass="value-label-gold" text="00:00:00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label styleClass="dim-label" text="Truyền Ảnh:" GridPane.rowIndex="2" />
+                                          <Label styleClass="dim-label" text="Truyền Màn Hình:" GridPane.rowIndex="2" />
                                           <Label fx:id="lblStreamStatus" styleClass="value-label-green" text="🟢 Đang truyền 2s/khung hình" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                          <Label styleClass="dim-label" text="Số Ảnh Đã Gửi:" GridPane.rowIndex="3" />
+                                          <Label styleClass="dim-label" text="Số Khung Hình:" GridPane.rowIndex="3" />
                                           <Label fx:id="lblFrameCount" styleClass="value-label" text="0 khung hình" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                        </children>
                                     </GridPane>
@@ -169,37 +231,86 @@
                </children>
             </HBox>
 
-            <!-- THẺ 3: HỘP THƯ THÔNG BÁO TỪ GIÁO VIÊN (NOTIFICATION FEED) -->
-            <VBox spacing="8.0" styleClass="anydesk-card" VBox.vgrow="ALWAYS">
-               <children>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0">
-                     <children>
-                        <Label styleClass="card-section-title" text="📢 HỘP THƯ THÔNG BÁO TỪ GIÁO VIÊN" />
-                        <Label fx:id="lblNoticeCount" styleClass="notice-badge" text="(0 thông báo)" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#onClearNotices" styleClass="btn-mini" text="🗑️ Xóa danh sách" />
-                     </children>
-                  </HBox>
-                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="130.0" styleClass="notice-scroll-pane" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+            <!-- KHỐI PHÍA DƯỚI: TAB HOẠT ĐỘNG PHONG CÁCH ANYDESK -->
+            <TabPane styleClass="anydesk-subtabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+              <tabs>
+                <!-- TAB 1: HỘP THƯ THÔNG BÁO TỪ GIÁO VIÊN -->
+                <Tab text="📢 Hộp Thư Giáo Viên">
                      <content>
-                        <VBox fx:id="noticeBox" spacing="8.0" styleClass="notice-container">
+                        <VBox spacing="8.0" styleClass="anydesk-tab-content">
                            <children>
-                              <Label fx:id="lblNoNotices" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="placeholder-label" text="Chưa có thông báo nào từ giáo viên. Các thông báo làm bài và nhắc nhở sẽ hiển thị tại đây." />
+                              <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <Label styleClass="dim-label-bold" text="THÔNG BÁO TỪ GIÁO VIÊN THEO THỜI GIAN THỰC:" />
+                                    <Label fx:id="lblNoticeCount" styleClass="notice-badge" text="(0 thông báo)" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#onClearNotices" styleClass="btn-mini" text="🗑️ Xóa danh sách" />
+                                 </children>
+                              </HBox>
+                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="110.0" styleClass="notice-scroll-pane" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <VBox fx:id="noticeBox" spacing="8.0" styleClass="notice-container">
+                                       <children>
+                                          <Label fx:id="lblNoNotices" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="placeholder-label" text="Chưa có thông báo nào từ giáo viên. Các thông báo làm bài và nhắc nhở sẽ hiển thị tại đây." />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </ScrollPane>
                            </children>
                            <padding>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="8.0" left="10.0" right="10.0" top="8.0" />
                            </padding>
                         </VBox>
                      </content>
-                  </ScrollPane>
-               </children>
-               <padding>
-                  <Insets bottom="12.0" left="14.0" right="14.0" top="12.0" />
-               </padding>
-            </VBox>
+                </Tab>
+
+                <!-- TAB 2: THÔNG TIN HỆ THỐNG MÁY TÍNH -->
+                <Tab text="💻 Thông Tin Máy Tính">
+                     <content>
+                        <VBox spacing="6.0" styleClass="anydesk-tab-content">
+                           <children>
+                              <GridPane hgap="12.0" vgap="6.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="NEVER" minWidth="130.0" />
+                                  <ColumnConstraints hgrow="ALWAYS" />
+                                  <ColumnConstraints hgrow="NEVER" minWidth="130.0" />
+                                  <ColumnConstraints hgrow="ALWAYS" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="22.0" />
+                                  <RowConstraints minHeight="22.0" />
+                                  <RowConstraints minHeight="22.0" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label styleClass="dim-label" text="Hệ Điều Hành:" />
+                                    <Label fx:id="lblOsInfo" styleClass="value-label" text="Windows 11 (64-bit)" GridPane.columnIndex="1" />
+                                    <Label styleClass="dim-label" text="Độ Phân Giải Màn Hình:" GridPane.columnIndex="2" />
+                                    <Label fx:id="lblResolutionInfo" styleClass="value-label" text="1920 x 1080" GridPane.columnIndex="3" />
+                                    <Label styleClass="dim-label" text="Tên Máy Tính (Host):" GridPane.rowIndex="1" />
+                                    <Label fx:id="lblHostInfo" styleClass="value-label" text="DESKTOP-LAN" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label styleClass="dim-label" text="Cổng Giao Thức Mạng:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label styleClass="value-label-cyan" text="TCP 9999 (Length-Prefixed)" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <Label styleClass="dim-label" text="Môi Trường Chạy:" GridPane.rowIndex="2" />
+                                    <Label fx:id="lblJavaInfo" styleClass="value-label" text="OpenJDK 21 (JavaFX 21)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label styleClass="dim-label" text="Trạng Thái Client:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label styleClass="value-label-green" text="🟢 Đang sẵn sàng hoạt động" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="12.0" right="12.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
          </children>
          <padding>
-            <Insets bottom="10.0" left="14.0" right="14.0" top="10.0" />
+            <Insets bottom="8.0" left="14.0" right="14.0" top="8.0" />
          </padding>
       </VBox>
    </center>
@@ -208,7 +319,7 @@
          <children>
             <Label fx:id="lblFooterStatus" styleClass="footer-label" text="🟢 Trạng thái hệ thống: Sẵn sàng kết nối" />
             <Region HBox.hgrow="ALWAYS" />
-            <Label styleClass="footer-brand" text="LanMonitor Client v1.0 — VKU Lab Surveillance" />
+            <Label styleClass="footer-brand" text="LanMonitor Client v1.0 — AnyDesk Edition" />
          </children>
          <padding>
             <Insets bottom="6.0" left="14.0" right="14.0" top="6.0" />

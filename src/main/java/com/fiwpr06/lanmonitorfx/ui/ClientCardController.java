@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -20,11 +21,12 @@ import javafx.stage.Stage;
 /**
  * Điều khiển một ô thẻ hiển thị ảnh chụp màn hình thu nhỏ (thumbnail) của sinh viên trong lưới giám sát.
  * Tự động cập nhật viền, huy hiệu trạng thái (Online / Offline / Cảnh báo) và độ trong suốt của thumbnail.
- * Hỗ trợ nhấp chuột để phóng to, sao chép IP và menu ngữ cảnh điều khiển nhanh.
+ * Hỗ trợ nhấp chuột để phóng to, sao chép IP, chọn checkbox (Google Drive style) và menu ngữ cảnh điều khiển nhanh.
  */
 public class ClientCardController {
 
     @FXML private VBox cardRoot;
+    @FXML private CheckBox chkSelect;
     @FXML private Label statusBadge;
     @FXML private Label ipLabel;
     @FXML private ImageView screenImage;
@@ -55,9 +57,13 @@ public class ClientCardController {
         // Tự động cập nhật ảnh khi ClientSession nhận được ảnh mới
         screenImage.imageProperty().bind(session.lastScreenProperty());
 
-        // Lắng nghe thay đổi trạng thái và cảnh báo để cập nhật giao diện
+        // Lắng nghe thay đổi trạng thái, cảnh báo và chọn lựa để cập nhật giao diện
+        if (chkSelect != null) {
+            chkSelect.selectedProperty().bindBidirectional(session.selectedProperty());
+        }
         session.statusProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::updateVisualState));
         session.warningProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::updateVisualState));
+        session.selectedProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(this::updateVisualState));
 
         // Cập nhật trạng thái hiển thị ban đầu
         updateVisualState();
@@ -76,10 +82,14 @@ public class ClientCardController {
         // Thiết lập menu ngữ cảnh (Right-click) cho thẻ
         setupCardContextMenu();
 
-        // Nhấn đúp hoặc nhấp chuột trái vào thẻ để mở cửa sổ phóng to
+        // Nhấn đúp để phóng to màn hình, hoặc Ctrl+Click để chọn nhanh thẻ
         cardRoot.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                openZoomWindow();
+                if (event.getClickCount() == 2) {
+                    openZoomWindow();
+                } else if (event.isControlDown() || event.isShiftDown()) {
+                    session.setSelected(!session.isSelected());
+                }
             }
         });
     }
@@ -158,8 +168,13 @@ public class ClientCardController {
     private void updateVisualState() {
         boolean isOnline = "Online".equalsIgnoreCase(session.getStatus());
         boolean isWarning = session.isWarning();
+        boolean isSelected = session.isSelected();
 
-        cardRoot.getStyleClass().removeAll("card-online", "card-offline", "card-warning");
+        cardRoot.getStyleClass().removeAll("card-online", "card-offline", "card-warning", "card-selected");
+
+        if (isSelected) {
+            cardRoot.getStyleClass().add("card-selected");
+        }
 
         if (isWarning) {
             cardRoot.getStyleClass().add("card-warning");

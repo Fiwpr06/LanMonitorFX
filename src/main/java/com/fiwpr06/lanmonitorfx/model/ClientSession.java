@@ -22,6 +22,7 @@ public class ClientSession {
     private final StringProperty ipAddress = new SimpleStringProperty("");
     private final StringProperty status = new SimpleStringProperty("Online");
     private final BooleanProperty warning = new SimpleBooleanProperty(false);
+    private final BooleanProperty selected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Image> lastScreen = new SimpleObjectProperty<>(null);
     private SocketConnection connection;
 
@@ -118,6 +119,18 @@ public class ClientSession {
 
     public BooleanProperty warningProperty() {
         return warning;
+    }
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public void setSelected(boolean value) {
+        this.selected.set(value);
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
     }
 
     public Image getLastScreen() {

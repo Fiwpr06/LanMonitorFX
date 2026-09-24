@@ -17,48 +17,74 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="680.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fiwpr06.lanmonitorfx.ui.ServerMainController">
    <top>
-      <ToolBar styleClass="tool-bar" BorderPane.alignment="CENTER">
-         <items>
-            <Button mnemonicParsing="false" onAction="#onLock" styleClass="btn-primary" text="🔒 Khóa máy" />
-            <Button mnemonicParsing="false" onAction="#onUnlock" styleClass="btn-primary" text="🔓 Mở khóa" />
-            <MenuButton mnemonicParsing="false" styleClass="menu-btn" text="Quản lý ▾">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#onShutdownSelected" text="⚡ Tắt máy sinh viên đang chọn" />
-                <MenuItem mnemonicParsing="false" onAction="#onRestartSelected" text="🔄 Khởi động lại máy đang chọn" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" onAction="#onShutdownAll" text="⚠️ Tắt TOÀN BỘ máy trạm (Cả lớp)" />
-                <MenuItem mnemonicParsing="false" onAction="#onRestartAll" text="🔄 Khởi động lại TOÀN BỘ máy trạm" />
-                <MenuItem mnemonicParsing="false" onAction="#onLogoutAll" text="🚪 Đăng xuất TOÀN BỘ máy trạm" />
-              </items>
-            </MenuButton>
-            <Button mnemonicParsing="false" onAction="#onNotify" styleClass="btn-primary" text="💬 Gửi thông báo" />
-            <Button mnemonicParsing="false" onAction="#onViewLog" styleClass="btn-secondary" text="📜 Xem nhật ký" />
-            <Separator orientation="VERTICAL" />
-            <HBox alignment="CENTER_LEFT" spacing="6.0">
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <!-- THANH CÔNG CỤ CHÍNH: CÁC THAO TÁC TOÀN CỤC CẢ LỚP -->
+            <ToolBar styleClass="tool-bar">
+               <items>
+                  <Button mnemonicParsing="false" onAction="#onLock" styleClass="btn-primary" text="🔒 Khóa cả lớp" />
+                  <Button mnemonicParsing="false" onAction="#onUnlock" styleClass="btn-primary" text="🔓 Mở khóa cả lớp" />
+                  <MenuButton mnemonicParsing="false" styleClass="menu-btn" text="Quản lý cả lớp ▾">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onShutdownAll" text="⚡ Tắt TOÀN BỘ máy tính (Cả lớp)" />
+                      <MenuItem mnemonicParsing="false" onAction="#onRestartAll" text="🔄 Khởi động lại TOÀN BỘ máy tính (Cả lớp)" />
+                      <MenuItem mnemonicParsing="false" onAction="#onLogoutAll" text="🚪 Đăng xuất TOÀN BỘ máy tính (Cả lớp)" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem mnemonicParsing="false" onAction="#onLock" text="🔒 Khóa TOÀN BỘ máy tính (Cả lớp)" />
+                      <MenuItem mnemonicParsing="false" onAction="#onUnlock" text="🔓 Mở khóa TOÀN BỘ máy tính (Cả lớp)" />
+                    </items>
+                  </MenuButton>
+                  <Button mnemonicParsing="false" onAction="#onNotify" styleClass="btn-primary" text="💬 Gửi thông báo cả lớp" />
+                  <Button mnemonicParsing="false" onAction="#onViewLog" styleClass="btn-secondary" text="📜 Xem nhật ký" />
+                  <Separator orientation="VERTICAL" />
+                  <HBox alignment="CENTER_LEFT" spacing="6.0">
+                     <children>
+                        <Label styleClass="server-ip-title" text="🌐 IP Server:" />
+                        <Label fx:id="lblServerIp" styleClass="server-ip-badge" text="127.0.0.1" />
+                        <Button fx:id="btnCopyIp" mnemonicParsing="false" onAction="#onCopyServerIp" styleClass="btn-secondary" text="📋 Copy IP" />
+                     </children>
+                  </HBox>
+               </items>
+            </ToolBar>
+
+            <!-- THANH THAO TÁC THEO MÁY ĐƯỢC CHỌN (GOOGLE DRIVE STYLE ACTION BAR) -->
+            <HBox fx:id="selectionBar" alignment="CENTER_LEFT" managed="false" spacing="10.0" styleClass="selection-bar" visible="false">
                <children>
-                  <Label styleClass="server-ip-title" text="🌐 IP Server:" />
-                  <Label fx:id="lblServerIp" styleClass="server-ip-badge" text="127.0.0.1" />
-                  <Button fx:id="btnCopyIp" mnemonicParsing="false" onAction="#onCopyServerIp" styleClass="btn-secondary" text="📋 Copy IP" />
+                  <Label fx:id="lblSelectedCount" styleClass="selection-count-badge" text="✓ Đã chọn 0 máy tính" />
+                  <Separator orientation="VERTICAL" />
+                  <Button fx:id="btnActionNotify" mnemonicParsing="false" onAction="#onNotifySelected" styleClass="btn-action-cyan" text="💬 Gửi thông báo" />
+                  <Button fx:id="btnActionLock" mnemonicParsing="false" onAction="#onLockSelected" styleClass="btn-action-primary" text="🔒 Khóa máy" />
+                  <Button fx:id="btnActionUnlock" mnemonicParsing="false" onAction="#onUnlockSelected" styleClass="btn-action-primary" text="🔓 Mở khóa" />
+                  <Button fx:id="btnActionShutdown" mnemonicParsing="false" onAction="#onShutdownSelected" styleClass="btn-action-danger" text="⚡ Tắt máy" />
+                  <Button fx:id="btnActionRestart" mnemonicParsing="false" onAction="#onRestartSelected" styleClass="btn-action-warning" text="🔄 Khởi động lại" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#onClearSelection" styleClass="btn-action-clear" text="✕ Bỏ chọn" />
                </children>
+               <padding>
+                  <Insets bottom="6.0" left="14.0" right="14.0" top="6.0" />
+               </padding>
             </HBox>
-         </items>
-      </ToolBar>
+         </children>
+      </VBox>
    </top>
    <center>
       <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Danh sách Học sinh">
+          <Tab text="📋 Danh Sách Máy Tính">
                <content>
                   <TableView fx:id="clientTable" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="colIndex" prefWidth="60.0" text="STT" />
+                      <TableColumn fx:id="colSelect" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="☑" />
+                      <TableColumn fx:id="colIndex" maxWidth="55.0" minWidth="50.0" prefWidth="55.0" text="STT" />
                       <TableColumn fx:id="colMssv" prefWidth="130.0" text="MSSV" />
-                      <TableColumn fx:id="colName" prefWidth="250.0" text="Họ và Tên" />
-                      <TableColumn fx:id="colIp" prefWidth="190.0" text="IP / Máy" />
-                      <TableColumn fx:id="colStatus" prefWidth="150.0" text="Trạng Thái" />
+                      <TableColumn fx:id="colName" prefWidth="240.0" text="Họ và Tên" />
+                      <TableColumn fx:id="colIp" prefWidth="170.0" text="Địa chỉ IP" />
+                      <TableColumn fx:id="colStatus" prefWidth="130.0" text="Trạng Thái" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -66,7 +92,7 @@
                   </TableView>
                </content>
           </Tab>
-          <Tab text="Giám sát Màn hình">
+          <Tab text="🖥️ Lưới Giám Sát Màn Hình">
                <content>
                   <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
                      <content>
